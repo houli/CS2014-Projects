@@ -39,6 +39,19 @@ static void selectionSort(int a[], int size) {
    elements into the correct location in an initially
    empty sorted part.*/
 void insertionSort(int a[], int size) {
+  int i;
+
+  for (i = 1; i < size; i++) {
+    int j = i;
+    int val = a[i];
+
+    while (val < a[j - 1]) {
+      a[j] = a[j - 1];
+      j--;
+    }
+    a[j] = val;
+
+  }
 
 }
 
@@ -127,7 +140,8 @@ int main()
 
   nnums = read_in(nums, size, "numbers.txt");
   // funnySort(nums, nnums);
-  selectionSort(nums, nnums);
+  // selectionSort(nums, nnums);
+  insertionSort(nums, nnums);
   write_out(nums, nnums);
   /* flush output buffer, so all output appears on screen */
   fflush(stdout);
