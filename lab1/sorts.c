@@ -58,6 +58,16 @@ void insertionSort(int a[], int size) {
 /* bubble sort algorithm: repeatedly compare and swap
    adjacent array elements. */
 void bubbleSort(int a[], int size) {
+  int i, j, temp;
+  for (i = size - 1; i > 0; i--) {
+    for (j = 0; j < i; j++) {
+      if (a[j] > a[j + 1]) {
+        temp = a[j];
+        a[j] = a[j + 1];
+        a[j + 1] = temp;
+      }
+    }
+  }
 
 }
 
@@ -141,7 +151,8 @@ int main()
   nnums = read_in(nums, size, "numbers.txt");
   // funnySort(nums, nnums);
   // selectionSort(nums, nnums);
-  insertionSort(nums, nnums);
+  // insertionSort(nums, nnums);
+  bubbleSort(nums, nnums);
   write_out(nums, nnums);
   /* flush output buffer, so all output appears on screen */
   fflush(stdout);
