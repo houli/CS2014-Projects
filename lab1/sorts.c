@@ -25,11 +25,13 @@ static void selectionSort(int a[], int size) {
   int i, temp;
 
   for (i = 0; i < size; i++) {
-    int min = findMin(a, size - i, i);
-
-    temp = a[i];
-    a[i] = a[min];
-    a[min] = temp;
+    int min_index = findMin(a, size - i, i);
+    
+    if (min_index != i) {
+      temp = a[i];
+      a[i] = a[min];
+      a[min] = temp;
+    }
   }
 }
 
