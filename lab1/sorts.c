@@ -38,8 +38,9 @@ static void selectionSort(int a[], int size) {
 /* insertion sort algorithm: place unsorted array
    elements into the correct location in an initially
    empty sorted part.*/
-void insertionSort(int a[], int size) {
+int insertionSort(int a[], int size) {
   int i;
+  int count = 0;
 
   for (i = 1; i < size; i++) {
     int j = i;
@@ -48,17 +49,19 @@ void insertionSort(int a[], int size) {
     while (val < a[j - 1]) {
       a[j] = a[j - 1];
       j--;
+      count++;
     }
     a[j] = val;
 
   }
-
+  return count;
 }
 
 /* bubble sort algorithm: repeatedly compare and swap
    adjacent array elements. */
-void bubbleSort(int a[], int size) {
+int bubbleSort(int a[], int size) {
   int i, j, temp;
+  int count = 0;
   for (i = size - 1; i > 0; i--) {
     for (j = 0; j < i; j++) {
       if (a[j] > a[j + 1]) {
@@ -66,16 +69,18 @@ void bubbleSort(int a[], int size) {
         a[j] = a[j + 1];
         a[j + 1] = temp;
       }
+      count++;
     }
   }
-
+  return count;
 }
 
 /* funny sort algorithm: like bubble sort only we
    go back to the start every time we find a pair
    out of order. */
-void funnySort(int a[], int size) {
+int funnySort(int a[], int size) {
   int j, temp;
+  int count = 0;
 
   j = 0;
   while ( j < size - 1 ) {
@@ -88,7 +93,9 @@ void funnySort(int a[], int size) {
     else {
       j++;
     }
+    count++;
   }
+  return count;
 }
 
 /* Open a file. Abort progam if file cannot be opened */
@@ -148,12 +155,27 @@ int main()
   int nums[size];
   int nnums;
 
+  int result;
+
   nnums = read_in(nums, size, "numbers.txt");
-  // funnySort(nums, nnums);
-  // selectionSort(nums, nnums);
-  // insertionSort(nums, nnums);
-  bubbleSort(nums, nnums);
+  result = funnySort(nums, nnums);
   write_out(nums, nnums);
+  printf("funnySort took %d iterations.\n\n", result);
+
+  // nnums = read_in(nums, size, "numbers.txt");
+  // result = selectionSort(nums, nnums);
+  // write_out(nums, nnums);
+  // printf("selectionSort took %d iterations.\n", result);
+
+  nnums = read_in(nums, size, "numbers.txt");
+  result = insertionSort(nums, nnums);
+  write_out(nums, nnums);
+  printf("insertionSort took %d iterations.\n\n", result);
+
+  nnums = read_in(nums, size, "numbers.txt");
+  result = bubbleSort(nums, nnums);
+  write_out(nums, nnums);
+  printf("bubbleSort took %d iterations.\n", result);
   /* flush output buffer, so all output appears on screen */
   fflush(stdout);
 
