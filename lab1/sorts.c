@@ -22,10 +22,14 @@ int findMin(int a[], int size, int start) {
 /* selection sort algorithm: repeatedly find smallest
    element and place at start of unsorted section. */
 static void selectionSort(int a[], int size) {
-  int i;
+  int i, temp;
+
   for (i = 0; i < size; i++) {
     int min = findMin(a, size - i, i);
-    a[i] = min;
+
+    temp = a[i];
+    a[i] = a[min];
+    a[min] = temp;
   }
 }
 
@@ -120,7 +124,7 @@ int main()
   int nnums;
 
   nnums = read_in(nums, size, "numbers.txt");
-  funnySort(nums, nnums);
+  // funnySort(nums, nnums);
   selectionSort(nums, nnums);
   write_out(nums, nnums);
   /* flush output buffer, so all output appears on screen */
