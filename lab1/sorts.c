@@ -24,7 +24,7 @@ int findMin(int a[], int size, int start) {
 static void selectionSort(int a[], int size) {
   int i, temp;
 
-  for (i = 0; i < size; i++) {
+  for (i = 0; i < size - 1; i++) {
     int min_index = findMin(a, size, i);
 
     if (min_index != i) {
