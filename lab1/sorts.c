@@ -21,18 +21,23 @@ int findMin(int a[], int size, int start) {
 
 /* selection sort algorithm: repeatedly find smallest
    element and place at start of unsorted section. */
-static void selectionSort(int a[], int size) {
+int selectionSort(int a[], int size) {
   int i, temp;
+  int count = 0;
 
   for (i = 0; i < size - 1; i++) {
     int min_index = findMin(a, size, i);
+
+    count += min_index - i;
 
     if (min_index != i) {
       temp = a[i];
       a[i] = a[min_index];
       a[min_index] = temp;
     }
+    count++;
   }
+  return count;
 }
 
 /* insertion sort algorithm: place unsorted array
@@ -162,10 +167,10 @@ int main()
   write_out(nums, nnums);
   printf("funnySort took %d iterations.\n\n", result);
 
-  // nnums = read_in(nums, size, "numbers.txt");
-  // result = selectionSort(nums, nnums);
-  // write_out(nums, nnums);
-  // printf("selectionSort took %d iterations.\n", result);
+  nnums = read_in(nums, size, "numbers.txt");
+  result = selectionSort(nums, nnums);
+  write_out(nums, nnums);
+  printf("selectionSort took %d iterations.\n\n", result);
 
   nnums = read_in(nums, size, "numbers.txt");
   result = insertionSort(nums, nnums);
