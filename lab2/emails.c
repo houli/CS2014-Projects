@@ -30,7 +30,7 @@ int is_alpha_or_digit(char c) {
 
 int is_valid_email_address(char * address, char ** terminators, int num_terminators)
 {
-  int state = 1;
+  int state = 0;
   int length = strlen(address);
   int i = 0;
 
@@ -39,20 +39,28 @@ int is_valid_email_address(char * address, char ** terminators, int num_terminat
     
     switch (state) {
 
+      case 0:
+      if (is_alpha_or_digit(next)) {
+        state = 1;
+      } else {
+        return 0;
+      }
+      break;
+
       case 1:
       if (is_alpha_or_digit(next)) {
+        state = 1;
+      } else if (next == '@') {
         state = 2;
+      } else if (next == '.') {
+        state = 3;
       } else {
         return 0;
       }
       break;
 
       case 2:
-      if (is_alpha_or_digit(next)) {
-        state = 2;
-      } else if (next == '@') {
-        state = 3;
-      } else if (next == '.') {
+      if(is_alpha_or_digit(next)) {
         state = 4;
       } else {
         return 0;
@@ -60,8 +68,8 @@ int is_valid_email_address(char * address, char ** terminators, int num_terminat
       break;
 
       case 3:
-      if(is_alpha_or_digit(next)) {
-        state = 5;
+      if (is_alpha_or_digit(next)) {
+        state = 1;
       } else {
         return 0;
       }
@@ -69,7 +77,9 @@ int is_valid_email_address(char * address, char ** terminators, int num_terminat
 
       case 4:
       if (is_alpha_or_digit(next)) {
-        state = 2;
+        state = 4;
+      } else if (next == '.') {
+        state = 5;
       } else {
         return 0;
       }
@@ -77,8 +87,6 @@ int is_valid_email_address(char * address, char ** terminators, int num_terminat
 
       case 5:
       if (is_alpha_or_digit(next)) {
-        state = 5;
-      } else if (next == '.') {
         state = 6;
       } else {
         return 0;
@@ -87,17 +95,9 @@ int is_valid_email_address(char * address, char ** terminators, int num_terminat
 
       case 6:
       if (is_alpha_or_digit(next)) {
-        state = 7;
-      } else {
-        return 0;
-      }
-      break;
-
-      case 7:
-      if (is_alpha_or_digit(next)) {
-        state = 7;
-      } else if (next == '.') {
         state = 6;
+      } else if (next == '.') {
+        state = 5;
       } else {
         return 0;
       }
@@ -109,7 +109,7 @@ int is_valid_email_address(char * address, char ** terminators, int num_terminat
     i++;
   }
 
-  if (state == 7) {
+  if (state == 6) {
     return check_terminator(address, terminators, num_terminators);
   }
   return 0;
