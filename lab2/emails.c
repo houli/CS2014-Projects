@@ -32,9 +32,9 @@ int is_valid_email_address(char * address, char ** terminators, int num_terminat
 {
   int state = 0;
   int length = strlen(address);
-  int i = 0;
+  int i;
 
-  while (i < length) {
+  for (i = 0; i < length; i++) {
     char next = address[i];
     
     switch (state) {
@@ -106,7 +106,6 @@ int is_valid_email_address(char * address, char ** terminators, int num_terminat
       default:
       return 0;
     }
-    i++;
   }
 
   if (state == 6) {
