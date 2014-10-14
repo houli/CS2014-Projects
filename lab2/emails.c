@@ -128,7 +128,6 @@ int main()
 {
   const int length = 5;
   char * terminators[length];
-  char * address1, * address2;
 
   terminators[0] = "com";
   terminators[1] = "net";
@@ -136,11 +135,17 @@ int main()
   terminators[3] = "ie";
   terminators[4] = "tv";
 
-  address1 = "santa.claus@north.pole.com";
-  address2 = "I.am@fish";
+  // Valid
+  print_validity("santa.claus@north.pole.com", terminators, length);
+  print_validity("houli.houli.houli.houli@tcd.tcd.tcd.ie", terminators, length);
+  print_validity("92323.233ga.f4@s24.com", terminators, length);
 
-  print_validity(address1, terminators, length);
-  print_validity(address2, terminators, length);
+  printf("\n");
+
+  // Invalid
+  print_validity("I.am@fish", terminators, length);
+  print_validity(".asd.sds@tcd.com", terminators, length);
+  print_validity("ehoulih@tcd@tcd.ie", terminators, length);
 
   return 0;
 }
