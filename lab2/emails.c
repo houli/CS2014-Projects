@@ -3,6 +3,16 @@
 #include <string.h>
 #include <ctype.h>
 
+enum State {
+  initial,
+  alphaNum,
+  at,
+  dot,
+  alphaNumAfterAt,
+  dotAfterAt,
+  alphaNumAfterDotAfterAt
+};
+
 void string_copy(char * dst, char * src, int length) {
   int i;
   for (i = 0; i < length; i++) {
@@ -60,7 +70,7 @@ int is_alpha_or_digit(char c) {
 
 int is_valid_email_address(char * address, char ** terminators, int num_terminators)
 {
-  int state = 0;
+  enum State state = initial;
   int length = string_length(address);
   int i;
 
@@ -69,65 +79,65 @@ int is_valid_email_address(char * address, char ** terminators, int num_terminat
     
     switch (state) {
 
-      case 0:
+      case initial:
       if (is_alpha_or_digit(next)) {
-        state = 1;
+        state = alphaNum;
       } else {
         return 0;
       }
       break;
 
-      case 1:
+      case alphaNum:
       if (is_alpha_or_digit(next)) {
-        state = 1;
+        state = alphaNum;
       } else if (next == '@') {
-        state = 2;
+        state = at;
       } else if (next == '.') {
-        state = 3;
+        state = dot;
       } else {
         return 0;
       }
       break;
 
-      case 2:
+      case at:
       if(is_alpha_or_digit(next)) {
-        state = 4;
+        state = alphaNumAfterAt;
       } else {
         return 0;
       }
       break;
 
-      case 3:
+      case dot:
       if (is_alpha_or_digit(next)) {
-        state = 1;
+        state = alphaNum;
       } else {
         return 0;
       }
       break;
 
-      case 4:
+      case alphaNumAfterAt:
       if (is_alpha_or_digit(next)) {
-        state = 4;
+        state = alphaNumAfterAt;
       } else if (next == '.') {
-        state = 5;
+        state = dotAfterAt;
       } else {
         return 0;
       }
       break;
 
-      case 5:
+      case dotAfterAt:
       if (is_alpha_or_digit(next)) {
-        state = 6;
+        state = alphaNumAfterDotAfterAt;
       } else {
         return 0;
       }
       break;
 
-      case 6:
+      case alphaNumAfterDotAfterAt:
       if (is_alpha_or_digit(next)) {
-        state = 6;
+        state = alphaNumAfterDotAfterAt;
       } else if (next == '.') {
-        state = 5;
+        state = dotAfterAt;
       } else {
         return 0;
       }
