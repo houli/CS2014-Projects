@@ -3,18 +3,48 @@
 #include <string.h>
 #include <ctype.h>
 
+void string_copy(char * dst, char * src, int length) {
+  int i;
+  for (i = 0; i < length; i++) {
+    dst[i] = src[i];
+  }
+  dst[i] = '\0';
+}
+
+int string_length(char * string) {
+  int len = 0;
+  while (string[len] != '\0') {
+    len++;
+  }
+  return len;
+}
+
+int string_compare(char * s1, char * s2) {
+  int len = string_length(s1);
+  if (len != string_length(s2)) {
+    return 0;
+  }
+
+  int i;
+  for (i = 0; i < len; i++) {
+    if (s1[i] != s2[i]) {
+      return 0;
+    }
+  }
+  return 1;
+}
+
 int check_terminator(char * address, char** terminators, int num_terminators) {
-  int length = strlen(address);
+  int length = string_length(address);
   char *last_dot = strrchr(address, '.');
   int dot_index = (last_dot - address) + 1;
 
   char terminator[length - dot_index];
-  memcpy(terminator, &address[dot_index], length - dot_index);
-  terminator[length - dot_index] = '\0';
+  string_copy(terminator, last_dot + 1, length - dot_index + 1);
 
   int i;
   for (i = 0; i < num_terminators; i++) {
-    if (strcmp(terminator, terminators[i]) == 0){
+    if (string_compare(terminator, terminators[i])){
       return 1;
     }
   }
@@ -31,7 +61,7 @@ int is_alpha_or_digit(char c) {
 int is_valid_email_address(char * address, char ** terminators, int num_terminators)
 {
   int state = 0;
-  int length = strlen(address);
+  int length = string_length(address);
   int i;
 
   for (i = 0; i < length; i++) {
