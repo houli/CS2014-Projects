@@ -100,7 +100,7 @@ int is_valid_email_address(char * address, char ** terminators, int num_terminat
       break;
 
       case at:
-      if(is_alpha_or_digit(next)) {
+      if(isalpha(next)) {
         state = alphaNumAfterAt;
       } else {
         return 0;
@@ -108,7 +108,7 @@ int is_valid_email_address(char * address, char ** terminators, int num_terminat
       break;
 
       case dot:
-      if (is_alpha_or_digit(next)) {
+      if (isalpha(next)) {
         state = alphaNum;
       } else {
         return 0;
@@ -126,7 +126,7 @@ int is_valid_email_address(char * address, char ** terminators, int num_terminat
       break;
 
       case dotAfterAt:
-      if (is_alpha_or_digit(next)) {
+      if (isalpha(next)) {
         state = alphaNumAfterDotAfterAt;
       } else {
         return 0;
