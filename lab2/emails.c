@@ -80,7 +80,7 @@ int is_valid_email_address(char * address, char ** terminators, int num_terminat
     switch (state) {
 
       case initial:
-      if (is_alpha_or_digit(next)) {
+      if (isalpha(next)) {
         state = alphaNum;
       } else {
         return 0;
@@ -177,7 +177,7 @@ int main()
   // Valid
   print_validity("santa.claus@north.pole.com", terminators, length);
   print_validity("houli.houli.houli.houli@tcd.tcd.tcd.ie", terminators, length);
-  print_validity("92323.233ga.f4@s24.com", terminators, length);
+  print_validity("a92323.233ga.f4@s24.com", terminators, length);
 
   printf("\n");
 
