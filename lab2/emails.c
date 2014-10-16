@@ -71,6 +71,14 @@ int check_terminator(char * address, char** terminators, int num_terminators) {
   char terminator[length - dot_index];
   string_copy(terminator, address + dot_index, length - dot_index + 1);
 
+
+  // Handle upper/mixed case terminators by converting to lowercase
+  int term_length = length - dot_index;
+  int j;
+  for (j = 0; j < term_length; j++) {
+    terminator[j] = tolower(terminator[j]);
+  }
+
   int i;
   for (i = 0; i < num_terminators; i++) {
     if (string_compare(terminator, terminators[i])){
@@ -200,6 +208,7 @@ int main()
   print_validity("santa.claus@north.pole.com", terminators, length);
   print_validity("houli.houli.houli.houli@tcd.tcd.tcd.ie", terminators, length);
   print_validity("a92323.g233a.f4@s24.com", terminators, length);
+  print_validity("UPPERCASE@TCD.IE", terminators, length);
 
   printf("\n");
 
