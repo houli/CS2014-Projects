@@ -3,6 +3,8 @@
 #include <string.h>
 #include <ctype.h>
 
+
+// Enum used to give nicer names to the states rather than 0, 1, 2 etc.
 enum State {
   initial,
   alphaNum,
@@ -44,13 +46,30 @@ int string_compare(char * s1, char * s2) {
   return 1;
 }
 
+/*
+*  A function to find the index of the last
+*  occurrence of a specfic character in a string.
+*  Returns the index if it's found. Otherwise
+*  it returns -1.
+*/
+int last_char_occurrence(char * string, char c) {
+  int length = string_length(string);
+
+  while (length >= 0) {
+    if (string[length] == c) {
+      return length;
+    }
+    length--;
+  }
+  return -1;
+}
+
 int check_terminator(char * address, char** terminators, int num_terminators) {
   int length = string_length(address);
-  char *last_dot = strrchr(address, '.');
-  int dot_index = (last_dot - address) + 1;
+  int dot_index = last_char_occurrence(address, '.') + 1;
 
   char terminator[length - dot_index];
-  string_copy(terminator, last_dot + 1, length - dot_index + 1);
+  string_copy(terminator, address + dot_index, length - dot_index + 1);
 
   int i;
   for (i = 0; i < num_terminators; i++) {
@@ -77,10 +96,11 @@ int is_valid_email_address(char * address, char ** terminators, int num_terminat
   for (i = 0; i < length; i++) {
     char next = address[i];
     
+    // A state machine based on the next character. Anything other than alphanum, @, . is invalid and goes straight to false
     switch (state) {
 
       case initial:
-      if (isalpha(next)) {
+      if (isalpha(next)) { // first char must be alpha
         state = alphaNum;
       } else {
         return 0;
@@ -88,7 +108,7 @@ int is_valid_email_address(char * address, char ** terminators, int num_terminat
       break;
 
       case alphaNum:
-      if (is_alpha_or_digit(next)) {
+      if (is_alpha_or_digit(next)) { // all other characters in identifer can be alphanum
         state = alphaNum;
       } else if (next == '@') {
         state = at;
@@ -148,9 +168,11 @@ int is_valid_email_address(char * address, char ** terminators, int num_terminat
     }
   }
 
-  if (state == 6) {
+  if (state == alphaNumAfterDotAfterAt) {
+    // If in this state after the loop there has been at least one alpha after a '.' after an '@' so we can check the terminator
     return check_terminator(address, terminators, num_terminators);
   }
+  // Any other state is incorrect for checking the terminator
   return 0;
 }
 
@@ -177,14 +199,17 @@ int main()
   // Valid
   print_validity("santa.claus@north.pole.com", terminators, length);
   print_validity("houli.houli.houli.houli@tcd.tcd.tcd.ie", terminators, length);
-  print_validity("a92323.233ga.f4@s24.com", terminators, length);
+  print_validity("a92323.g233a.f4@s24.com", terminators, length);
 
   printf("\n");
 
   // Invalid
-  print_validity("I.am@fish", terminators, length);
-  print_validity(".asd.sds@tcd.com", terminators, length);
-  print_validity("ehoulih@tcd@tcd.ie", terminators, length);
+  print_validity("I.am@fish", terminators, length); // No terminator
+  print_validity(".asd.sds@tcd.com", terminators, length); // Begins with '.'
+  print_validity("ehoulih@tcd@tcd.ie", terminators, length); // Two @ symbols
+  print_validity("", terminators, length); // Empty string
+  print_validity("@tcd.ie", terminators, length); // Begins with '@'
+  print_validity("ehoulih@tcd.es", terminators, length); // Invalid terminator
 
   return 0;
 }
