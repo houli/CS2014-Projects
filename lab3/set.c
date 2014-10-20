@@ -82,7 +82,7 @@ int int_set_add(int_set * this, int item) {
 int int_set_remove(int_set * this, int item) {
   int index = index_of(this, item);
   if (index != -1) {
-    int tmp = this->array[current_elements];
+    int tmp = this->array[this->current_elements - 1];
     this->array[this->current_elements--] = this->array[index];
     this->array[index] = tmp;
     return 1;
