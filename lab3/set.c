@@ -22,22 +22,17 @@ int_set * int_set_new() {
   return new_set;
 }
 
-void increase_set(int_set * this) {
-  int new_array_size = (this->max_elements * 7) / 4;
-  int * new_array = malloc(sizeof(int) * new_array_size);
+void resize_set(int_set * this, int new_size) {
+  int * new_array = malloc(sizeof(int) * new_size);
 
   int i;
-  for (i = 0; i < this->max_elements; i++) {
+  for (i = 0; i < this->current_elements; i++) {
     new_array[i] = this->array[i];
   }
 
   free(this->array);
   this->array = new_array;
-  this->max_elements = new_array_size;
-}
-
-void decrease_set(int_set * this) {
-
+  this->max_elements = new_size;
 }
 
 // get the index of an item in the set
@@ -68,8 +63,8 @@ int int_set_lookup(int_set * this, int item) {
 // has no effect if the item is already in the set
 int int_set_add(int_set * this, int item) {
   if (!int_set_lookup(this, item)) {
-    if (this->current_elements > this->max_elements) {
-      increase_set(this);
+    if (this->current_elements == this->max_elements) {
+      resize_set(this, this->max_elements * 2);
     }
     this->array[this->current_elements++] = item;
     return 1;
@@ -82,6 +77,9 @@ int int_set_add(int_set * this, int item) {
 int int_set_remove(int_set * this, int item) {
   int index = index_of(this, item);
   if (index != -1) {
+    if (this->current_elements == this->max_elements / 2) {
+      resize_set(this, this->max_elements / 2);
+    }
     int tmp = this->array[this->current_elements - 1];
     this->array[this->current_elements--] = this->array[index];
     this->array[index] = tmp;
@@ -92,12 +90,23 @@ int int_set_remove(int_set * this, int item) {
 
 // place the union of src1 and src2 into dest
 void int_set_union(int_set * dest, int_set * src1, int_set * src2) {
-
+  int i;
+  for (i = 0; i < src1->current_elements; i++) {
+    int_set_add(dest, src1->array[i]);
+  }
+  for (i = 0; i < src2->current_elements; i++) {
+    int_set_add(dest, src2->array[i]);
+  }
 }
 
 // place the intersection of src1 and src2 into dest
 void int_set_intersect(int_set * dest, int_set * src1, int_set * src2) {
-
+  int i;
+  for (i = 0; i < src1->current_elements; i++) {
+    if (int_set_lookup(src2, src1->array[i])) {
+      int_set_add(dest, src1->array[i]);
+    }
+  }
 }
 
 void int_set_print(int_set * set) {
@@ -119,17 +128,24 @@ void int_set_print(int_set * set) {
 
 int main() {
   int_set  * set = int_set_new();
-  int_set_add(set, 1);
+  int i;
+  for (i = 5; i <= 300; i += 5) {
+    int_set_add(set, i);
+  }
   int_set_print(set);
-  int_set_add(set, 2);
-  int_set_print(set);
-  int_set_add(set, 3);
-  int_set_print(set);
-  int_set_add(set, 235);
-  int_set_print(set);
-  int_set_add(set, 12);
-  int_set_print(set);
-  int_set_add(set, 124124);
-  int_set_print(set);
+
+  int_set * set2 = int_set_new();
+  for (i = 3; i <= 300; i += 3) {
+    int_set_add(set2, i);
+  }
+  int_set_print(set2);
+
+  int_set * intersect = int_set_new();
+  int_set_intersect(intersect, set, set2);
+  int_set_print(intersect);
+
+  int_set * union_set = int_set_new();
+  int_set_union(union_set, set, set2);
+  int_set_print(union_set);
   return 0;
 }
