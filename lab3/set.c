@@ -67,10 +67,10 @@ int int_set_lookup(int_set * this, int item) {
 // add an item, with number 'item' to the set
 // has no effect if the item is already in the set
 int int_set_add(int_set * this, int item) {
-  if (this->current_elements == this->max_elements) {
-    increase_set(this);
-  }
   if (!int_set_lookup(this, item)) {
+    if (this->current_elements > this->max_elements) {
+      increase_set(this);
+    }
     this->array[this->current_elements++] = item;
     return 1;
   }
@@ -82,7 +82,9 @@ int int_set_add(int_set * this, int item) {
 int int_set_remove(int_set * this, int item) {
   int index = index_of(this, item);
   if (index != -1) {
+    int tmp = this->array[current_elements];
     this->array[this->current_elements--] = this->array[index];
+    this->array[index] = tmp;
     return 1;
   }
   return 0;
