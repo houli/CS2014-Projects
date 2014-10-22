@@ -80,9 +80,7 @@ int int_set_remove(int_set * this, int item) {
     if (this->current_elements == this->max_elements / 2) {
       resize_set(this, this->max_elements / 2);
     }
-    int tmp = this->array[this->current_elements - 1];
-    this->array[this->current_elements--] = this->array[index];
-    this->array[index] = tmp;
+    this->array[index] = this->array[--this->current_elements];
     return 1;
   }
   return 0;
@@ -146,6 +144,19 @@ int main() {
 
   int_set * union_set = int_set_new();
   int_set_union(union_set, set, set2);
+  int_set_print(union_set);
+
+  for (i = 5; i <= 300; i += 5) {
+    int_set_remove(union_set, i);
+    if (int_set_lookup(union_set, 0)) {
+      printf("%d\n", i);
+    }
+  }
+  int_set_print(union_set);
+
+  for (i = 3; i <= 300; i += 3) {
+    int_set_remove(union_set, i);
+  }
   int_set_print(union_set);
   return 0;
 }
