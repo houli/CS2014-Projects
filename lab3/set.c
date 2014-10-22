@@ -30,6 +30,7 @@ void resize_set(int_set * this, int new_size) {
     new_array[i] = this->array[i];
   }
 
+  // free memory from old array and point at the new array
   free(this->array);
   this->array = new_array;
   this->max_elements = new_size;
@@ -64,6 +65,7 @@ int int_set_lookup(int_set * this, int item) {
 int int_set_add(int_set * this, int item) {
   if (!int_set_lookup(this, item)) {
     if (this->current_elements == this->max_elements) {
+      // increase set size when full
       resize_set(this, this->max_elements * 2);
     }
     this->array[this->current_elements++] = item;
@@ -77,6 +79,7 @@ int int_set_add(int_set * this, int item) {
 int int_set_remove(int_set * this, int item) {
   int index = index_of(this, item);
   if (index != -1) {
+    // decrease set size when half full
     if (this->current_elements == this->max_elements / 2) {
       resize_set(this, this->max_elements / 2);
     }
@@ -88,6 +91,7 @@ int int_set_remove(int_set * this, int item) {
 
 // place the union of src1 and src2 into dest
 void int_set_union(int_set * dest, int_set * src1, int_set * src2) {
+  // add all elements of both sets. elements won't be added if they already exist
   int i;
   for (i = 0; i < src1->current_elements; i++) {
     int_set_add(dest, src1->array[i]);
@@ -102,6 +106,7 @@ void int_set_intersect(int_set * dest, int_set * src1, int_set * src2) {
   int i;
   for (i = 0; i < src1->current_elements; i++) {
     if (int_set_lookup(src2, src1->array[i])) {
+      // if the elements of src1 are in src2 they are added to dest
       int_set_add(dest, src1->array[i]);
     }
   }
