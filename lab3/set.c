@@ -164,13 +164,13 @@ int main() {
     }
   }
   int_set_print(union_set);
-  printf("Size of set: %d\nEmpty spaces: %d\n", union_set->max_elements, union_set->max_elements - union_set->current_elements);
+  printf("Size of array: %d\nEmpty spaces: %d\n", union_set->max_elements, union_set->max_elements - union_set->current_elements);
 
   printf("\nUnion set after multiples of 3 and 5 removed:\n");
   for (i = 3; i <= 300; i += 3) {
     int_set_remove(union_set, i);
   }
   int_set_print(union_set);
-  printf("Size of set: %d\nEmpty spaces: %d\n", union_set->max_elements, union_set->max_elements - union_set->current_elements);
+  printf("Size of array: %d\nEmpty spaces: %d\n", union_set->max_elements, union_set->max_elements - union_set->current_elements);
   return 0;
 }
