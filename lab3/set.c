@@ -131,26 +131,32 @@ void int_set_print(int_set * set) {
 
 int main() {
   int_set  * set = int_set_new();
+
+  printf("Set of multiples of 5 up to 300:\n");
   int i;
   for (i = 5; i <= 300; i += 5) {
     int_set_add(set, i);
   }
   int_set_print(set);
 
+  printf("\nSet of multiples of 3 up to 300:\n");
   int_set * set2 = int_set_new();
   for (i = 3; i <= 300; i += 3) {
     int_set_add(set2, i);
   }
   int_set_print(set2);
 
+  printf("\nIntersection of first two multiple sets:\n");
   int_set * intersect = int_set_new();
   int_set_intersect(intersect, set, set2);
   int_set_print(intersect);
 
+  printf("\nUnion of first two multiple sets:\n");
   int_set * union_set = int_set_new();
   int_set_union(union_set, set, set2);
   int_set_print(union_set);
 
+  printf("\nUnion set after multiples of 5 removed:\n");
   for (i = 5; i <= 300; i += 5) {
     int_set_remove(union_set, i);
     if (int_set_lookup(union_set, 0)) {
@@ -158,10 +164,13 @@ int main() {
     }
   }
   int_set_print(union_set);
+  printf("Size of set: %d\nEmpty spaces: %d\n", union_set->max_elements, union_set->max_elements - union_set->current_elements);
 
+  printf("\nUnion set after multiples of 3 and 5 removed:\n");
   for (i = 3; i <= 300; i += 3) {
     int_set_remove(union_set, i);
   }
   int_set_print(union_set);
+  printf("Size of set: %d\nEmpty spaces: %d\n", union_set->max_elements, union_set->max_elements - union_set->current_elements);
   return 0;
 }
