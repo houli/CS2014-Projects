@@ -45,7 +45,7 @@ int bitset_lookup(bitset * this, int item) {
   int index = item / (this->size * INT_SIZE);
   int bit_offset = item % INT_SIZE;
 
-  return (this->array[index] & (1 << bit_offset)) != 0;
+  return this->array[index] & (1 << bit_offset);
 }
 
 // add an item, with number 'item' to the set
@@ -77,18 +77,24 @@ int bitset_remove(bitset * this, int item) {
 
 // place the union of src1 and src2 into dest
 void bitset_union(bitset * dest, bitset * src1, bitset * src2) {
-
+  int i;
+  for (i = 0; i < src1->size; i++) {
+    dest->array[i] = src1->array[i] | src2->array[i];
+  }
 }
 
 // place the intersection of src1 and src2 into dest
 void bitset_intersect(bitset * dest, bitset * src1, bitset * src2) {
-  
+  int i;
+  for (i = 0; i < src1->size; i++) {
+    dest->array[i] = src1->array[i] & src2->array[i];
+  }
 }
 
 int main() {
   bitset * set = bitset_new(300);
-  bitset_add(set, 20);  
-  if (bitset_lookup(set, 20) == 1) {
+  bitset_add(set, 20);
+  if (bitset_lookup(set, 20)) {
     printf("In there!\n");
   } else {
     printf("Not in there!\n");
