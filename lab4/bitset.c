@@ -6,11 +6,13 @@ const int INT_SIZE = sizeof(unsigned int) * 8;
 typedef struct {
   unsigned int * array;
   int size;
+  int universe_size;
 } bitset;
 
 // create a new, empty bit vector set of 'size' items
 bitset * bitset_new(int size) {
   bitset * set = malloc(sizeof(bitset));
+  set->universe_size = size;
 
   set->size = size / INT_SIZE;
   if (size % INT_SIZE != 0) {
@@ -29,7 +31,7 @@ bitset * bitset_new(int size) {
 // check to see if an item is out of bounds
 // returns 1 if the item is out of bounds, 0 otherwise
 int out_of_bounds(bitset * this, int item) {
-  if (item >= (this->size * INT_SIZE) || item < 0) {
+  if (item >= this->universe_size || item < 0) {
     return 1;
   } else {
     return 0;
