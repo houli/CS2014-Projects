@@ -73,7 +73,7 @@ int bitset_remove(bitset * this, int item) {
   int index = item / (this->size * INT_SIZE);
   int bit_offset = item % INT_SIZE;
 
-  this->array[index] &= (!(1 << bit_offset));
+  this->array[index] &= (~(1 << bit_offset));
   return 1;
 }
 
