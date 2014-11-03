@@ -2,17 +2,18 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <math.h>
+#include <string.h>
 #include "stack.h"
 
 const char OPERATORS[] = {'+', '-', 'x', '/', '%'};
 const int NUM_OPERATORS = 5;
 
 int is_operator(char * str) {
-  char c = str[0];
-  if (c == '-' && isdigit(str[1])) {
+  if (strlen(str) > 1) {
     return 0;
   }
 
+  char c = str[0];
   int i;
   for (i = 0; i < NUM_OPERATORS; i++) {
     if (c == OPERATORS[i]) {
