@@ -13,5 +13,5 @@ int stack_push(stack * stack, double number);
 // Pops a value off the stack.
 double stack_pop(stack * stack);
 
-// Returns 1 if the stack is empty, 0 oterwise.
+// Returns 1 if the stack is empty, 0 otherwise.
 int stack_is_empty(stack * stack);
