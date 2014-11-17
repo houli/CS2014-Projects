@@ -19,3 +19,6 @@ node * node_next(node * node);
 
 // returns the string contained in a node
 char * node_get_string(node * node);
+
+// compares the data in a node to a string
+int node_compare(node * node, char * str);

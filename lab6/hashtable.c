@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "hashtable.h"
 
 hashtable * hashtable_new(int size) {
@@ -41,11 +40,11 @@ void hashtable_remove(hashtable * this, char * item) {
   if (hashtable_lookup(this, item)) {
     unsigned hash = hash_string(item);
     node * current = this->table[hash % this->size];
-    if (strcmp(item, node_get_string(current)) == 0) {
+    if (node_compare(current, item)) {
       this->table[hash % this->size] = node_next(current);
       node_free(current);
     } else {
-      while (!strcmp(item, node_get_string(node_next(current))) == 0) {
+      while (!node_compare(node_next(current), item)) {
         current = node_next(current);
       }
       node * next = node_next(current);
@@ -62,7 +61,7 @@ int hashtable_lookup(hashtable * this, char * item) {
   } else {
     node * node = this->table[hash % this->size];
     while (node != NULL) {
-      if (strcmp(item, node_get_string(node)) == 0) {
+      if (node_compare(node, item)) {
         return 1;
       }
       node = node_next(node);

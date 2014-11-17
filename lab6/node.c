@@ -25,3 +25,7 @@ node * node_next(node * node) {
 char * node_get_string(node * node) {
   return node->data;
 }
+
+int node_compare(node * node, char * str) {
+  return strcmp(node->data, str) == 0;
+}
