@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <string.h>
 #include "huffman.h"
+#include "bitfile.h"
 
 const int CHARACTER_SET_SIZE = 128;
 const char * error_string = "Usage: huff[de]code <training file> <input file> <output file>";
@@ -12,16 +13,14 @@ int main(int argc, char ** argv) {
     fprintf(stderr, "%s\n", error_string);
     exit(1);
   } else {
-    unsigned char c;
+    int c;
     FILE * file;
     int freqs[CHARACTER_SET_SIZE] = {};
 
     file = fopen(argv[1], "r");
     assert(file != NULL);
-    c = fgetc(file);
-    while (!feof(file)) {
+    while ((c = fgetc(file)) != EOF) {
       freqs[c]++;
-      c = fgetc(file);
     }
     fclose(file);
 
@@ -38,9 +37,19 @@ int main(int argc, char ** argv) {
     int ** encodings = malloc(sizeof(int *) * CHARACTER_SET_SIZE);
     huffman_tree_walk(tree, encodings);
 
-    if (strcmp(argv[0], "huffcode") == 0) {
-      // encode the file
-    } else if (strcmp(argv[0], "huffdecode") == 0) {
+    if (strcmp(argv[0], "./huffcode") == 0) {
+      FILE * in_file = fopen(argv[2], "r");
+      bitfile * out_file = bitfile_new(fopen(argv[3], "w"));
+      while ((c = fgetc(in_file)) != EOF) {
+        int * encoding = encodings[c];
+        int length = encoding[0];
+        for (i = 1; i < length + 1; i++) {
+          bitfile_write(out_file, encoding[i]);
+        }
+      }
+      fclose(in_file);
+      bitfile_close(out_file);
+    } else if (strcmp(argv[0], "./huffdecode") == 0) {
       // decode the file
     } else {
       fprintf(stderr, "%s\n", error_string);
