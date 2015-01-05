@@ -13,6 +13,6 @@ void huffman_tree_merge(huffman_tree * tree);
 
 void find_smallest(huffman_tree * tree, int * smallest, int * next_smallest, int end);
 
-void huffman_tree_walk(huffman_tree * tree);
+void huffman_tree_walk(huffman_tree * tree, int ** encodings);
 
 void huffman_tree_free(huffman_tree * tree);

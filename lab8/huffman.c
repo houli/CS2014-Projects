@@ -43,29 +43,29 @@ void huffman_tree_merge(huffman_tree * tree) {
   }
 }
 
-static void _huffman_tree_walk(symbol * sym, int * path, int depth) {
+static void _huffman_tree_walk(symbol * sym, int * path, int depth, int ** encodings) {
 
   if (sym->is_leaf) {
-    printf("%c: ", sym->data.c);
+    int * encoding = malloc(sizeof(int) * (depth + 1));
+    encoding[0] = depth;
     int i;
     for (i = 0; i < depth; i++) {
-      printf("%d", path[i]);
+      encoding[i + 1] = path[i];
     }
-    printf("\n");
-    return;
+    encodings[sym->data.c] = encoding;
   } else {
     path[depth] = 0;
-    _huffman_tree_walk(sym->data.children.left, path, depth + 1);
+    _huffman_tree_walk(sym->data.children.left, path, depth + 1, encodings);
 
     path[depth] = 1;
-    _huffman_tree_walk(sym->data.children.right, path, depth + 1);
+    _huffman_tree_walk(sym->data.children.right, path, depth + 1, encodings);
   }
 
 }
 
-void huffman_tree_walk(huffman_tree * tree) {
+void huffman_tree_walk(huffman_tree * tree, int ** encodings) {
   int * path = malloc(sizeof(int) * 40);
-  _huffman_tree_walk(tree->table[0], path, 0);
+  _huffman_tree_walk(tree->table[0], path, 0, encodings);
   free(path);
 }
 

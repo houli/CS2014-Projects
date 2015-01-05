@@ -10,7 +10,7 @@ struct symbol {
       symbol * left;
       symbol * right;
     } children;
-    char c;
+    unsigned char c;
   } data;
   int frequency;
   bool is_leaf;
