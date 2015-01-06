@@ -39,16 +39,33 @@ int main(int argc, char ** argv) {
 
     if (strcmp(argv[0], "./huffcode") == 0) {
       FILE * in_file = fopen(argv[2], "r");
-      bitfile * out_file = bitfile_new(fopen(argv[3], "w"));
+      FILE * out = fopen(argv[3], "w");
+      bitfile * out_file = bitfile_new(out);
+
+      // Making room for a header to store the character length of the original file
+      for (i = 0; i < 4; i++) {
+        fputc(0, out);
+      }
+
+      int count = 0;
       while ((c = fgetc(in_file)) != EOF) {
         int * encoding = encodings[c];
         int length = encoding[0];
         for (i = 1; i < length + 1; i++) {
           bitfile_write(out_file, encoding[i]);
         }
+        count++;
       }
       fclose(in_file);
       bitfile_close(out_file);
+      out = fopen(argv[3], "r+");
+
+      // Write header information now we know the length of the file
+      // Shifts used to write one byte at a time
+      for (i = 3; i >= 0; i--) {
+        fputc((count >> (i * 8)) & 0xFF, out);
+      }
+      fclose(out);
     } else if (strcmp(argv[0], "./huffdecode") == 0) {
       // decode the file
     } else {
