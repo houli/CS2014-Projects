@@ -1,6 +1,4 @@
-typedef enum {
-  false, true
-} bool;
+#include "bool.h"
 
 typedef struct symbol symbol;
 

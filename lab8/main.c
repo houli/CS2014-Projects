@@ -67,7 +67,37 @@ int main(int argc, char ** argv) {
       }
       fclose(out);
     } else if (strcmp(argv[0], "./huffdecode") == 0) {
-      // decode the file
+      FILE * out_file = fopen(argv[3], "w");
+      FILE * in = fopen(argv[2], "r");
+      bitfile * in_file = bitfile_new(in);
+
+      // Get length of character sequence from 4 byte header
+      unsigned char bytes[4];
+      for (i = 0; i < 4; i++) {
+        bytes[i] = fgetc(in);
+      }
+      int length = (bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
+
+      int chars_decoded = 0;
+      symbol * root = tree->table[0];
+      symbol * current = root;
+      while (chars_decoded < length) {
+        if (current->is_leaf) {
+          fputc(current->data.c, out_file);
+          chars_decoded++;
+          current = root;
+        } else {
+          int bit = bitfile_read(in_file);
+          if (chars_decoded == 0) {
+          }
+          if (bit == 0) {
+            current = current->data.children.left;
+          } else {
+            current = current->data.children.right;
+          }
+        }
+      }
+      fclose(out_file);
     } else {
       fprintf(stderr, "%s\n", error_string);
       exit(1);

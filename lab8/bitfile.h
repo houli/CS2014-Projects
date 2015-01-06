@@ -4,6 +4,7 @@ typedef struct {
   int buffer_index;
   FILE * file;
   char buffer;
+  int init;
 } bitfile;
 
 bitfile * bitfile_new(FILE * file);

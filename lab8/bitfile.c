@@ -5,7 +5,8 @@ bitfile * bitfile_new(FILE * file) {
   bitfile * new = malloc(sizeof(bitfile));
   new->file = file;
   new->buffer = 0;
-  new-> buffer_index = 8;
+  new->buffer_index = 8;
+  new->init = 0;
   return new;
 }
 
@@ -17,13 +18,16 @@ void bitfile_close(bitfile * this) {
 }
 
 int bitfile_read(bitfile * this) {
+  if (!this->init) {
+    this->init = 1;
+    this->buffer = fgetc(this->file);
+  }
   int result;
   if (this->buffer_index == 0) {
     this->buffer = fgetc(this->file);
     this->buffer_index = 8;
   }
-  result = this->buffer >> ((this->buffer_index) & 1);
-  this->buffer_index--;
+  result = (this->buffer >> --this->buffer_index) & 1;
   return result;
 }
 
@@ -34,9 +38,8 @@ void bitfile_write(bitfile * this, int bit) {
     this->buffer_index = 8;
   }
   if (bit == 0) {
-    this->buffer &= ~(1 << (this->buffer_index - 1));
+    this->buffer &= ~(1 << (--this->buffer_index));
   } else {
-    this->buffer |= bit << (this->buffer_index - 1);
+    this->buffer |= bit << (--this->buffer_index);
   }
-  this->buffer_index--;
 }
