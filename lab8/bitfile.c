@@ -11,10 +11,13 @@ bitfile * bitfile_new(FILE * file) {
 }
 
 void bitfile_close(bitfile * this) {
+  fclose(this->file);
+}
+
+void bitfile_flush(bitfile * this) {
   if (this->buffer_index != 8) {
     fputc(this->buffer, this->file);
   }
-  fclose(this->file);
 }
 
 int bitfile_read(bitfile * this) {
